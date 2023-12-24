@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <iterator>
 #include <memory>
+#include <stdexcept>
 
 struct tree_node {
     int value;
@@ -52,6 +53,7 @@ struct tree {
     std::unique_ptr<tree_node> root;
     class iterator {
         tree_node *p;
+        tree_node *root;
 
       public:
         iterator operator++(int) { // post-increment
@@ -68,8 +70,8 @@ struct tree {
         // реализовать проверку на попытку получения элемента за пределами
         // индексов дерева
         [[nodiscard]] int const &at() const {
-            // if (index out of range condition)
-            //  throw std::out_of_range("index out of range");
+            if (p == nullptr)
+                throw std::out_of_range("index out of range");
             return p->value;
         }
 
@@ -117,7 +119,7 @@ struct tree {
         friend iterator operator+(iterator const &self, ptrdiff_t diff);
         friend ptrdiff_t operator-(iterator const &self, iterator other);
         // Скорее всего придётся реализовать
-        explicit iterator(tree_node *x) : p(x) {}
+        explicit iterator(tree_node *x, tree_node *root) : p(x), root(root) {}
 
         // Начиная с C++20 следующие 5 строк генерируются автоматически
         using difference_type = ptrdiff_t;

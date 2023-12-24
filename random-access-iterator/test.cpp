@@ -1,5 +1,6 @@
 #include "tree.hpp"
 #include <algorithm>
+#include <stdexcept>
 #include <doctest.h>
 
 TEST_CASE("can iterate") {
